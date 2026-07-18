@@ -1,0 +1,20 @@
+<h2>
+    produto selecionado:
+    @if(produtoSelecionado()){
+        <strong style="color:green">{{ produtoSelecionado() |uppercase }}</strong>
+    }@else{
+        <span style="color:gray">nenhum produto Selecionado</span>
+    }
+</h2>
+@for(item of produtos(); track item){
+    <app-produto
+    [nome]="item.nome"
+    [preco]="item.preco"
+    (produtoSelecionado) ="exibirProduto($event)"
+    ></app-produto>
+    
+}
+<p><button  aria-label="gfrdxgfxgfhhdxg"  (click)="adicionarProduto()"> Adicionar Produto </button></p>
+<p><button (click)="substituirProdutos()">Substituir Produto</button></p>
+<h2>Total de Produtos: {{ totalProdutos() }}</h2>
+<h3>Valor Total: {{valorTotal() | precoFormatado}}</h3>
