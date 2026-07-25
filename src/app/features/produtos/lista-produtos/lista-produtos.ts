@@ -5,6 +5,9 @@ import {computed} from '@angular/core';
 import {PrecoFormatadoPipe} from '../../../shared/pipes/preco-formatado-pipe';
 import { effect } from '@angular/core'
 import { UpperCasePipe } from '@angular/common';
+import { produtosService } from '../produtos service';
+import { inject } from '@angular/core';
+
 @Component({
   selector: 'app-lista-produtos',
   imports: [Produto, PrecoFormatadoPipe,UpperCasePipe ],
@@ -12,17 +15,22 @@ import { UpperCasePipe } from '@angular/common';
   styleUrl: './lista-produtos.css',
 })
 export class ListaProdutos {
-  //!lista de dados -Array de produtos com nome e preço
-  produtos = signal( [
-    {nome:'teclado Gamer', preco:229.99},
-    {nome:'mouse Gamer', preco:300.99},
-    {nome:'monitor', preco:207.99}
-  ]);
+//!lista de dados -Array de produtos com nome e preço
+  produtos = signal<{nome: string; preco: number}[]>([]);
+  carregando = signal(true);
+  produtoSelecionado = signal<string | null>(null);
+  carrinho = signal <{nome: string; preco: number}[]>([]);
+
   //!função para exibir produtos selecionados pelo usuário no controle
   exibirProduto(nome: string){
     console.log('Produto Selecionado: ', nome);
     this.produtoSelecionado.set(nome);
   }
+ 
+//** ==================== INJECT =======================
+
+    private produtosService = inject(produtosService);
+
   //!função que adicionar produto usando metodo update()
   adicionarProduto(){
     this.produtos.update(listaAtual =>[
@@ -30,15 +38,14 @@ export class ListaProdutos {
 {nome:'Playstation 5', preco:3000},
     ]);
   }
+
   //!função que contabiliza a quantidade de produtos na lista com metodo computed()
   totalProdutos = computed(() => this.produtos().length);
   //!função que calcula o valor total do protudos usando metodo computed()
+
   valorTotal = computed(() =>
   {return this.produtos().reduce((total, item) =>
-    total + item.preco,0
-  
-  )}
-
+    total + item.preco,0 )}
   );
   //função para substituir a lista atual usando o metodo ser()
   substituirProdutos(){
@@ -50,8 +57,28 @@ export class ListaProdutos {
       {nome:'headset' , preco: 30 },
     ]);
   }
-  //! metodo para monitorar aiterações em tempo real usando effect()
+
+  carregarProdutos(){
+
+this.carregando.set(true);
+this.produtosService.buscarProdutos().subscribe({
+  next:(dados) => {
+    const produtos = this.produtosService.transFormarProdutos(dados);
+    this.produtos.set(produtos);
+    this.carregando.set(false);
+  },
+  error: (erro) => {
+    console.error('erro ao carregar produtos:',erro);
+    this.carregando.set(false);
+  }
+});
+   }
+ //! metodo para monitorar aiterações em tempo real usando effect()
   constructor(){
+    //! Carrega a API
+    this.carregarProdutos();
+
+    //! effect continuam iguais - não mexer
     effect(() => {
       console.log('Lista de Produtos Alterados', this.produtos());
     });
@@ -62,13 +89,12 @@ export class ListaProdutos {
         if (typeof document !== 'undefined'){
           document.title = `(${this.totalProdutos()}) - Loja da jojo`;
         }
-      });
-    
+      }); 
   }
-  //! Metodo para criar um estado de seleção com signal string | null
-  produtoSelecionado = signal <string | null>(null);
+ //! Metodo para criar um estado de seleção com signal string | null
+  produtoselecionado = signal <string | null>(null);
   //! metodo para criar um estado para carrinho com signal
-  carrinho = signal <{nome: string; preco: number}[]>([]);
+  Carrinho = signal <{nome: string; preco: number}[]>([]);
   adicionarAoCarrinho(produto:{nome: string; preco: number}){
     this.carrinho.update(listaAtual => [...listaAtual, produto]
     );
@@ -80,5 +106,19 @@ export class ListaProdutos {
   totalCarrinho = computed(() =>{
     return this.carrinho().reduce((total, item) => 
       total + item.preco,0)});
-}
+}  
+
+  
+
+
+
+
+
+
+
+
+ 
+ 
+
+
 
