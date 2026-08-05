@@ -1,5 +1,7 @@
-<div class="produto">
+<div classe="produto">
 <h3>{{ nome | uppercase }}</h3>
 <p>{{ preco | precoFormatado }}</p>
-<button (click)="selecionarProduto()"> Selecionar {{nome}}</button>
+<button (click)="selecionarProduto()">selecionar{{nome}}</button>
+<button (click)="adicionarAoCarrinho()">adicionarAoCarrinho</button>
+
 </div>

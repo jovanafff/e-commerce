@@ -3,7 +3,7 @@ import { Produto } from '../produto/produto';
 import { signal } from '@angular/core';
 import {computed} from '@angular/core';
 import {PrecoFormatadoPipe} from '../../../shared/pipes/preco-formatado-pipe';
-import { effect } from '@angular/core'
+import { effect } from '@angular/core';
 import { UpperCasePipe } from '@angular/common';
 import { produtosService } from '../produtos service';
 import { inject } from '@angular/core';
@@ -20,6 +20,7 @@ export class ListaProdutos {
   carregando = signal(true);
   produtoSelecionado = signal<string | null>(null);
   carrinho = signal <{nome: string; preco: number}[]>([]);
+  erro = signal <string | null>(null);
 
   //!função para exibir produtos selecionados pelo usuário no controle
   exibirProduto(nome: string){
@@ -59,7 +60,7 @@ export class ListaProdutos {
   }
 
   carregarProdutos(){
-
+this.erro.set(null);
 this.carregando.set(true);
 this.produtosService.buscarProdutos().subscribe({
   next:(dados) => {
@@ -69,6 +70,7 @@ this.produtosService.buscarProdutos().subscribe({
   },
   error: (erro) => {
     console.error('erro ao carregar produtos:',erro);
+    this.erro.set('erro ao carregar o serviço');
     this.carregando.set(false);
   }
 });
