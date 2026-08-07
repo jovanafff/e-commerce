@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatToolbarModule } from '@angular/material/toolbar'
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 
@@ -10,5 +10,5 @@ import { RouterLink } from '@angular/router';
   styleUrl: './header.css',
 })
 export class Header {
-  nomeLoja = 'loja da jojo'
+  nomeLoja = 'loja da jojo';
 }
