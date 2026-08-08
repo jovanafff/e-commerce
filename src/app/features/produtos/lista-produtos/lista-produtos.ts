@@ -5,8 +5,9 @@ import {computed} from '@angular/core';
 import {PrecoFormatadoPipe} from '../../../shared/pipes/preco-formatado-pipe';
 import { effect } from '@angular/core';
 import { UpperCasePipe } from '@angular/common';
-import { produtosService } from '../produtos service';
+import { produtosService } from '../../../core/services/produtos service';
 import { inject } from '@angular/core';
+import { CarrinhoService } from '../../../core/services/carrinho.service';
 
 @Component({
   selector: 'app-lista-produtos',
@@ -19,7 +20,6 @@ export class ListaProdutos {
   produtos = signal<{nome: string; preco: number}[]>([]);
   carregando = signal(true);
   produtoSelecionado = signal<string | null>(null);
-  carrinho = signal <{nome: string; preco: number}[]>([]);
   erro = signal <string | null>(null);
 
   //!função para exibir produtos selecionados pelo usuário no controle
@@ -31,6 +31,10 @@ export class ListaProdutos {
 //** ==================== INJECT =======================
 
     private produtosService = inject(produtosService);
+    public carrinhoService = inject(CarrinhoService);
+
+    quantidadeCarrinho = this.carrinhoService.quantidadeItens;
+    totalCarrinho = this.carrinhoService.totalItens;
 
   //!função que adicionar produto usando metodo update()
   adicionarProduto(){
@@ -96,18 +100,11 @@ this.produtosService.buscarProdutos().subscribe({
  //! Metodo para criar um estado de seleção com signal string | null
   produtoselecionado = signal <string | null>(null);
   //! metodo para criar um estado para carrinho com signal
-  Carrinho = signal <{nome: string; preco: number}[]>([]);
+  
   adicionarAoCarrinho(produto:{nome: string; preco: number}){
-    this.carrinho.update(listaAtual => [...listaAtual, produto]
-    );
+    this.carrinhoService.adicionar(produto);
   }
-  //! totalprodutos = computed(() => this.produtos().length);
-  //metodo para calcular a quantidade total de items no carrinho
-  quantidadeCarrinho = computed(() => this.carrinho().length);
-  //metodo para calcular o valor total dos itens do carrinho
-  totalCarrinho = computed(() =>{
-    return this.carrinho().reduce((total, item) => 
-      total + item.preco,0)});
+  
 }  
 
   
