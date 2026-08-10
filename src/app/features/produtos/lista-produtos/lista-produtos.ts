@@ -5,7 +5,7 @@ import {computed} from '@angular/core';
 import {PrecoFormatadoPipe} from '../../../shared/pipes/preco-formatado-pipe';
 import { effect } from '@angular/core';
 import { UpperCasePipe } from '@angular/common';
-import { produtosService } from '../../../core/services/produtos service';
+import { produtosService } from '../../../core/services/produtos.service';
 import { inject } from '@angular/core';
 import { CarrinhoService } from '../../../core/services/carrinho.service';
 
