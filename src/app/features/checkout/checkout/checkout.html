@@ -8,6 +8,7 @@
      @if(formulario.get('nome')?.errors?.['minlength']){
           <small style="color: red;">NOME DEVE TER NO MÍNIMO (2) DUAS LETRAS</small> |
      }
+     
      @if(formulario.get('nome')?.errors?.['numeroInvalido']){
           <small style="color: red;">NOME NÃO PODE CONTER NÚMERO</small>
      }
@@ -33,5 +34,5 @@
      }
      
 <hr>
-     <button type="button" (click)="finalizar()">Finalizar compra</button>
+     <button type="button" (click)="finalizar()"[disabled]="formulario.invalid">Finalizar compra</button>
 </form>
