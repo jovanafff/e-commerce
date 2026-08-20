@@ -8,7 +8,7 @@
         <section class="lista-carrinho">
             @for(item of carrinhoFacade.itensCarrinho(); track $index){
                 <article class="item-carrinho">
-                    <div>
+                    <div class="item">
                         <p><strong>{{item.nome}}</strong></p>
                         <p>{{ item.preco | precoFormatado }}</p>
                         <button mat-stroked-button color="warn"  type="button" (click)="removerItem($index) ">Remover</button>
@@ -25,6 +25,7 @@
             <p><strong>Total: </strong>{{carrinhoFacade.totalCarrinho()| precoFormatado}}</p>
 
         </section>
+        <hr>
         <section class="acoes-carrinho">
             <button mat-raised-button color="primary" type="button" (click)="limparCarrinho()">Limpar carrinho</button>
              <button mat-raised-button color="primary" type="button" routerLink="/produtos">Ver produtos</button>
